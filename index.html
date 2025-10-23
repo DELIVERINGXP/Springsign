@@ -1,36 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Springsign</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Springsign — Inspiring You</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>🌱 Welcome to Springsign</h1>
-    <p>Your smart hub for job discovery and automation tools.</p>
+  <!-- Off-canvas Menu -->
+  <aside id="sideMenu" class="side-menu" aria-hidden="true">
+    <div class="side-top">
+      <button id="closeMenu" class="icon-btn">✕</button>
+      <img src="assets/logo.png" alt="Springsign logo" class="side-logo" />
+      <h3>Springsign</h3>
+    </div>
+    <nav class="side-nav">
+      <a href="#" class="side-link" data-route="home">Home</a>
+      <a href="#" class="side-link" data-route="careers">Careers</a>
+      <a href="#" class="side-link" data-route="jobs">Jobs</a>
+      <div class="side-sub">
+        <div class="sub-title">Tools</div>
+        <a href="#" class="side-link">CRM (ClickUp)</a>
+        <a href="#" class="side-link">Interviews</a>
+        <a href="#" class="side-link">Tests & Assessments</a>
+      </div>
+      <a href="#" class="side-link">Contributions</a>
+    </nav>
+  </aside>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button id="menuBtn" class="icon-btn" aria-label="Open menu">☰</button>
+    </div>
+
+    <div class="header-center">
+      <!-- Centered logo (use the image you provided) -->
+      <img src="assets/logo.png" alt="Springsign logo" class="logo" />
+    </div>
+
+    <div class="header-right">
+      <button id="alertBtn" class="icon-btn" title="Job alerts">🔔<span id="alertBadge" class="badge hidden">0</span></button>
+      <div class="profile" id="profileBtn" title="Profile">
+        <div class="avatar">S</div>
+        <div class="profile-name">Account</div>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section>
-      <h2>Server Test</h2>
-      <button id="pingBtn">Ping API</button>
-      <pre id="apiResponse"></pre>
+  <!-- Profile dropdown -->
+  <div id="profileDropdown" class="profile-dropdown hidden">
+    <div class="profile-card">
+      <div class="avatar big">S</div>
+      <div>
+        <strong>Springsign</strong>
+        <div class="muted">Agency</div>
+      </div>
+    </div>
+    <hr />
+    <a href="#" class="dd-link">My Applications</a>
+    <a href="#" class="dd-link">Saved Jobs</a>
+    <a href="#" class="dd-link">Settings</a>
+    <a href="#" class="dd-link">Sign out</a>
+  </div>
+
+  <!-- Main content -->
+  <main class="main">
+    <section class="search-section">
+      <h1>Discover roles that inspire you</h1>
+      <p class="muted">Search across industries, companies and locations</p>
+
+      <div class="search-bar">
+        <input id="searchInput" type="text" placeholder="Search jobs, companies, industries..." />
+        <select id="filterIndustry">
+          <option value="">All industries</option>
+          <option>IT</option>
+          <option>Healthcare</option>
+          <option>Finance</option>
+          <option>Telecom</option>
+        </select>
+        <button id="searchBtn" class="cta">Search</button>
+        <button id="cvBtn" class="ghost">My CV</button>
+      </div>
+    </section>
+
+    <section id="results" class="results">
+      <!-- Job cards will be injected here; doomscroll if many -->
+      <div id="resultsInner" class="results-inner">
+        <p class="placeholder">Start by searching for jobs or press "Search" to browse recent postings.</p>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <p>© 2025 Springsign</p>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-left">
+      <img src="assets/logo.png" alt="Springsign" class="footer-logo" />
+      <div class="footer-meta">
+        <strong>Springsign</strong>
+        <div class="muted">Inspiring You</div>
+      </div>
+    </div>
+    <div class="footer-right">
+      <div class="socials">
+        <a href="#" aria-label="LinkedIn">in</a>
+        <a href="#" aria-label="YouTube">yt</a>
+        <a href="#" aria-label="Instagram">ig</a>
+        <a href="#" aria-label="Facebook">fb</a>
+        <a href="#" aria-label="WhatsApp">wa</a>
+      </div>
+      <div class="contact">
+        <a href="mailto:hello@springsign.example">hello@springsign.example</a>
+      </div>
+    </div>
   </footer>
 
-  <script>
-    document.getElementById("pingBtn").addEventListener("click", async () => {
-      const res = await fetch("/api/test");
-      const data = await res.json();
-      document.getElementById("apiResponse").textContent = JSON.stringify(data, null, 2);
-    });
-  </script>
+  <!-- Modals / Overlays -->
+  <div id="cvModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-panel">
+      <button class="close-modal icon-btn" data-close="cvModal">✕</button>
+      <h3>Your CV (paste text)</h3>
+      <textarea id="cvInput" placeholder="Paste your CV or key skills here..."></textarea>
+      <div class="modal-actions">
+        <button id="saveCv" class="cta">Save CV</button>
+        <button class="ghost" data-close="cvModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="recModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-panel">
+      <button class="close-modal icon-btn" data-close="recModal">✕</button>
+      <h3 id="recTitle">Recommendations</h3>
+      <div id="recBody"></div>
+      <div class="modal-actions">
+        <button id="addCertBtn" class="cta">Add Certification</button>
+        <button class="ghost" data-close="recModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <template id="jobTpl">
+    <article class="job-card">
+      <div class="job-left">
+        <img class="company-logo" src="assets/company-placeholder.png" alt="company logo" />
+        <div class="company-meta">
+          <strong class="company-name"></strong>
+          <div class="muted company-details"></div>
+        </div>
+      </div>
+
+      <div class="job-right">
+        <div class="job-head">
+          <h3 class="job-title"></h3>
+          <div class="job-actions">
+            <button class="icon-btn bell-btn" title="Set alert">🔔</button>
+            <button class="assessBtn cta">Assess</button>
+          </div>
+        </div>
+
+        <div class="job-metadata">
+          <div class="muted">Posted: <span class="posted"></span></div>
+          <div class="muted">Deadline: <span class="deadline"></span></div>
+        </div>
+
+        <div class="suitability">
+          <div class="meter-wrap">
+            <div class="meter">
+              <div class="meter-fill" style="width:0%"></div>
+            </div>
+            <div class="meter-label"><span class="meter-percent">0%</span> suitable</div>
+          </div>
+          <a class="link" target="_blank" rel="noopener noreferrer">View Job</a>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
 </body>
-    </html>
-  
+</html>
